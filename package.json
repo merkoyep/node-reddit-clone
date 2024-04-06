@@ -1,0 +1,16 @@
+{
+  "name": "reddit",
+  "version": "1.0.0",
+  "description": "reddit clone tutorial",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.2"
+  }
+}
