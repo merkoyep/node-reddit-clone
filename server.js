@@ -5,7 +5,8 @@ const Handlebars = require('handlebars');
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');
-
+// Set db
+require('./data/reddit-db');
 // Use "main" as our default layout
 app.engine(
   'handlebars',
@@ -18,8 +19,14 @@ app.engine(
 app.set('view engine', 'handlebars');
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.render('home');
 });
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Controllers
+require('./controllers/posts')(app);
 
 const port = process.env.PORT || 3000;
 
