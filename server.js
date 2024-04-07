@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Post = require('./models/post');
 const { engine } = require('express-handlebars');
 const Handlebars = require('handlebars');
 const {
@@ -18,8 +19,13 @@ app.engine(
 // Use handlebars to render
 app.set('view engine', 'handlebars');
 
-app.get('/', (req, res) => {
-  res.render('home');
+app.get('/', async (req, res) => {
+  try {
+    const posts = await Post.find({}).lean();
+    return res.render('posts-index', { posts });
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 // Middleware
 app.use(express.json());
