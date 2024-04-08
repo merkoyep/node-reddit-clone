@@ -8,6 +8,7 @@ const Handlebars = require('handlebars');
 const checkAuth = require('./middleware/checkAuth');
 app.use(cookieParser());
 app.use(checkAuth);
+app.use(express.static('public'));
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');

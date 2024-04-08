@@ -11,6 +11,9 @@ module.exports = (app) => {
       const userId = req.user._id;
       req.body.author = req.user;
       const post = new Post(req.body);
+      post.upVotes = [];
+      post.downVotes = [];
+      post.voteScore = 0;
       post
         .save()
         .then(() => User.findById(userId))
@@ -44,6 +47,33 @@ module.exports = (app) => {
     Post.find({ subreddit: req.params.subreddit })
       .lean()
       .then((posts) => res.render('posts-index', { posts, user }))
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+  app.put('/posts/:id/vote-up', (req, res) => {
+    Post.findById(req.params.id)
+      .then((post) => {
+        post.upVotes.push(req.user._id);
+        post.voteScore += 1;
+        post.save();
+
+        return res.status(200);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+
+  app.put('/posts/:id/vote-down', (req, res) => {
+    Post.findById(req.params.id)
+      .then((post) => {
+        post.downVotes.push(req.user._id);
+        post.voteScore -= 1;
+        post.save();
+
+        return res.status(200);
+      })
       .catch((err) => {
         console.log(err);
       });
