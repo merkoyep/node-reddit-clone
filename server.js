@@ -33,6 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Controllers
 require('./controllers/posts')(app);
+require('./controllers/comments.js')(app);
 
 const port = process.env.PORT || 3000;
 
