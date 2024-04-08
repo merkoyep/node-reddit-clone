@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-
+const Populate = require('../util/autopopulate');
 const postSchema = new Schema({
   title: { type: String, required: true },
   url: { type: String, required: true },
@@ -8,5 +8,5 @@ const postSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
-
+postSchema.pre('findOne', Populate('author')).pre('find', Populate('author'));
 module.exports = model('Post', postSchema);
