@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { describe, it } = require('mocha');
 const app = require('../server');
-
+const User = require('../models/user');
 chai.use(chaiHttp);
 const agent = chai.request.agent(app);
 
@@ -20,6 +20,22 @@ describe('Posts', () => {
     url: 'https://www.google.com',
     summary: 'post summary',
   };
+  const user = {
+    username: 'poststest',
+    password: 'testposts',
+  };
+  before(function (done) {
+    agent
+      .post('/sign-up')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user)
+      .then(function (res) {
+        done();
+      })
+      .catch(function (err) {
+        done(err);
+      });
+  });
   it('Should create with valid attributes at POST /posts/new', function (done) {
     this.timeout(5000);
 
@@ -54,7 +70,23 @@ describe('Posts', () => {
         done(err);
       });
   });
-  after(() => {
-    Post.findOneAndDelete(newPost);
+  after(function (done) {
+    Post.findOneAndDelete(newPost)
+      .then(function () {
+        agent.close();
+
+        User.findOneAndDelete({
+          username: user.username,
+        })
+          .then(function () {
+            done();
+          })
+          .catch(function (err) {
+            done(err);
+          });
+      })
+      .catch(function (err) {
+        done(err);
+      });
   });
 });
