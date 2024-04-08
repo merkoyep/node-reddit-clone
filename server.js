@@ -1,8 +1,11 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
+const dotenv = require('dotenv').config();
 const Post = require('./models/post');
 const { engine } = require('express-handlebars');
 const Handlebars = require('handlebars');
+app.use(cookieParser());
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');
@@ -34,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 // Controllers
 require('./controllers/posts')(app);
 require('./controllers/comments.js')(app);
+require('./controllers/auth.js')(app);
 
 const port = process.env.PORT || 3000;
 
