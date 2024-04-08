@@ -19,6 +19,7 @@ describe('Posts', () => {
     title: 'post title',
     url: 'https://www.google.com',
     summary: 'post summary',
+    subreddit: 'pets',
   };
   const user = {
     username: 'poststest',
@@ -37,8 +38,6 @@ describe('Posts', () => {
       });
   });
   it('Should create with valid attributes at POST /posts/new', function (done) {
-    this.timeout(5000);
-
     // Checks how many posts there are now
     Post.estimatedDocumentCount()
       .then((initialDocCount) => {

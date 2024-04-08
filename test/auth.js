@@ -18,17 +18,36 @@ describe('User', function () {
         done();
       });
   });
-  it('should be able to signup', function (done) {
-    User.findOneAndRemove({ username: 'testone' }, function () {
-      agent
-        .post('/sign-up')
-        .send({ username: 'testone', password: 'password' })
-        .end(function (err, res) {
-          console.log(res.body);
-          res.should.have.status(200);
-          agent.should.have.cookie('nToken');
-          done();
-        });
+  it('should be able to signup', async function () {
+    // First, try to remove any existing user
+    await User.findOneAndDelete({ username: 'testone' });
+
+    // Then, attempt to sign up a new user
+    const res = await agent
+      .post('/sign-up')
+      .send({ username: 'testone', password: 'password' });
+
+    // Assertions
+    res.should.have.status(200);
+    agent.should.have.cookie('nToken');
+  });
+  // login
+  it('should be able to login', function (done) {
+    agent
+      .post('/login')
+      .send({ username: 'testone', password: 'password' })
+      .end(function (err, res) {
+        res.should.have.status(200);
+        agent.should.have.cookie('nToken');
+        done();
+      });
+  });
+  // logout
+  it('should be able to logout', function (done) {
+    agent.get('/logout').end(function (err, res) {
+      res.should.have.status(200);
+      agent.should.not.have.cookie('nToken');
+      done();
     });
   });
   after(function () {
