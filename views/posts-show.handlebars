@@ -2,6 +2,7 @@
   <div class='col-sm-6 col-sm-offset-3'>
     <a href='{{post.url}}' class='lead'>{{post.title}}</a>
     <p>{{post.summary}}</p>
+    <p>{{post.author.username}}</p>
     <form action='/posts/{{post._id}}/comments' method='post'>
       <textarea
         class='form-control'
@@ -14,6 +15,7 @@
     </form>
     {{#each post.comments}}
       {{this.content}}
+      <p class='text-right'>{{this.author.username}}</p>
     {{/each}}
   </div>
 </div>

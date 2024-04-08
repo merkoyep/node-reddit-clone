@@ -5,7 +5,9 @@ const dotenv = require('dotenv').config();
 const Post = require('./models/post');
 const { engine } = require('express-handlebars');
 const Handlebars = require('handlebars');
+const checkAuth = require('./middleware/checkAuth');
 app.use(cookieParser());
+app.use(checkAuth);
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');
@@ -22,13 +24,16 @@ app.engine(
 // Use handlebars to render
 app.set('view engine', 'handlebars');
 
-app.get('/', async (req, res) => {
-  try {
-    const posts = await Post.find({}).lean();
-    return res.render('posts-index', { posts });
-  } catch (err) {
-    console.log(err.message);
-  }
+app.get('/', (req, res) => {
+  const { user } = req;
+  console.log(req.cookies);
+  Post.find({})
+    .lean()
+    .populate('author')
+    .then((posts) => res.render('posts-index', { posts, user }))
+    .catch((err) => {
+      console.log(err.message);
+    });
 });
 // Middleware
 app.use(express.json());
