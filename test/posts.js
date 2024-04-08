@@ -2,8 +2,9 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { describe, it } = require('mocha');
-chai.use(chaiHttp);
 const app = require('../server');
+
+chai.use(chaiHttp);
 const agent = chai.request.agent(app);
 
 // Import the Post model from our models folder so we
